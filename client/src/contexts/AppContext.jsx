@@ -13,7 +13,7 @@ const MAX_PER_ITEM_LIMIT = 5;
 const AppContextProvider = ({ children }) => {
 
     const [user, setUser] = useState(true)      // user stores user id or null if user isn't logged in 
-    const [isSeller, setIsSeller] = useState(false)     // if the user is Seller then isSeller is true.
+    const [isSeller, setIsSeller] = useState(true)     // if the user is Seller then isSeller is true.
     const navigate = useNavigate()
     const location = useLocation();
     const [products, setProducts] = useState()

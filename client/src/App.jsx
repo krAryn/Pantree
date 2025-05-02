@@ -14,6 +14,9 @@ import AddAddress from './pages/AddAddress.jsx'
 import MyOrders from './pages/MyOrders.jsx'
 import SellerLogin from './components/seller/SellerLogin.jsx'
 import SellerLayout from './pages/seller/SellerLayout.jsx'
+import AddProduct from './pages/seller/AddProduct.jsx'
+import ProductsList from './pages/seller/ProductsList.jsx'
+import Orders from './pages/seller/Orders.jsx'
 
 
 const App = () => {
@@ -26,7 +29,7 @@ const App = () => {
             
                 {!location.includes("seller") && !location.includes("login") && !location.includes("signup") && <Navbar />}
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route index element={<Home />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
@@ -36,7 +39,11 @@ const App = () => {
                     <Route path="/mycart" element={<Cart />} />
                     <Route path="/addaddress" element={<AddAddress />} />
                     <Route path="/myorders" element={<MyOrders />} />
-                    <Route path="/seller" element={true ? <SellerLayout /> :<SellerLogin />} />
+                    <Route path="/seller" element={isSeller ? <SellerLayout /> :<SellerLogin />}>
+                        <Route index element={<AddProduct />} />
+                        <Route path="productslist" element={<ProductsList />} />
+                        <Route path="orders" element={<Orders />} />
+                    </Route>
                 </Routes>
                 {!location.includes("seller") && !location.includes("login") && !location.includes("signup") && <Footer />}
         </div>
