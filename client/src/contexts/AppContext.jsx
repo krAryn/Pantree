@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { dummyProducts, dummyAddress } from '../assets/assets'
+import { dummyProducts, dummyAddress, dummyOrders } from '../assets/assets'
 import toast, { Toaster } from "react-hot-toast"
 
 const AppContext = createContext()
@@ -20,7 +20,7 @@ const AppContextProvider = ({ children }) => {
     const [searchQuery, setSearchQuery] = useState()
     const [addresses, setAddresses] = useState(dummyAddress)
     const [currentAddress, setCurrentAddress] = useState(addresses[0])
-    const [myOrders, setMyOrders] = useState()
+    const [myOrders, setMyOrders] = useState(dummyOrders)
 
 
     const fetchProducts = async () => {
