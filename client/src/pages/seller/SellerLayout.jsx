@@ -41,7 +41,7 @@ const SellerLayout = () => {
                         </NavLink>
                     ))}
                 </div>
-                {/* <Outlet /> */}
+                <Outlet />
             </div>
 
         </>
