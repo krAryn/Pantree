@@ -13,15 +13,16 @@ import Cart from './pages/Cart.jsx'
 import AddAddress from './pages/AddAddress.jsx'
 import MyOrders from './pages/MyOrders.jsx'
 import SellerLogin from './components/seller/SellerLogin.jsx'
+import SellerLayout from './pages/seller/SellerLayout.jsx'
 
 
 const App = () => {
-    const {products} = useAppContext()
+    const {products, isSeller} = useAppContext()
 
     const location = useLocation().pathname;
 
     return (
-        <div>
+        <div className='min-h-screen text-gray-700 bg-white'>
             
                 {!location.includes("seller") && !location.includes("login") && !location.includes("signup") && <Navbar />}
                 <Routes>
@@ -33,9 +34,9 @@ const App = () => {
                     {products && <Route path="/allproducts/:category" element={<ProductCategory />} />}
                     {products && <Route path="/allproducts/:category/:id" element={<ProductDetails/>} />}
                     <Route path="/mycart" element={<Cart />} />
-                    <Route path="addaddress" element={<AddAddress />} />
-                    <Route path="myorders" element={<MyOrders />} />
-                    <Route path="seller" element={<SellerLogin />} />
+                    <Route path="/addaddress" element={<AddAddress />} />
+                    <Route path="/myorders" element={<MyOrders />} />
+                    <Route path="/seller" element={true ? <SellerLayout /> :<SellerLogin />} />
                 </Routes>
                 {!location.includes("seller") && !location.includes("login") && !location.includes("signup") && <Footer />}
         </div>
