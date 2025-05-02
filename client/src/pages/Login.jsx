@@ -15,10 +15,10 @@ const Login = () => {
         formState: { errors, isSubmitting },
     } = useForm()
 
-    const submitData = (data) => {
+    const submitData = () => {
         return new Promise((res, rej) => {
             setTimeout(() => {
-                // console.log("Data submitted!\n", data)
+                console.log("Data submitted!")
                 res()}, 2000)
         })
     }
@@ -27,7 +27,7 @@ const Login = () => {
         if (!String(data.email).includes("@")) {
             toast.error("Please enter a valid Email address", {duration: 1000})
         } else {
-            await submitData(data)
+            await submitData()
             setUser(true);
             navigate("/home")
         }

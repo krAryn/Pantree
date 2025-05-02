@@ -12,7 +12,7 @@ const MAX_PER_ITEM_LIMIT = 5;
 
 const AppContextProvider = ({ children }) => {
 
-    const [user, setUser] = useState(null)      // user stores user id or null if user isn't logged in 
+    const [user, setUser] = useState(true)      // user stores user id or null if user isn't logged in 
     const [isSeller, setIsSeller] = useState(false)     // if the user is Seller then isSeller is true.
     const navigate = useNavigate()
     const location = useLocation();
@@ -20,6 +20,7 @@ const AppContextProvider = ({ children }) => {
     const [searchQuery, setSearchQuery] = useState()
     const [addresses, setAddresses] = useState(dummyAddress)
     const [currentAddress, setCurrentAddress] = useState(addresses[0])
+    const [myOrders, setMyOrders] = useState()
 
 
     const fetchProducts = async () => {
@@ -86,7 +87,7 @@ const AppContextProvider = ({ children }) => {
         setCartItems(newCartData);
     }
 
-    const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, addresses, setAddresses, currentAddress, setCurrentAddress}
+    const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, addresses, setAddresses, currentAddress, setCurrentAddress, myOrders, setMyOrders}
 
 
     useEffect(() => {

@@ -44,7 +44,7 @@ const Cart = () => {
     const placeOrder = async () => {
         return new Promise ((res, rej) => {
             setTimeout(() => {
-                // console.log("Order Placed")
+                console.log("Order Placed")
                 res();
             }, 2000)
         })
