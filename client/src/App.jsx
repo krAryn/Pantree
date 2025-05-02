@@ -12,6 +12,7 @@ import ProductDetails from './pages/ProductDetails.jsx'
 import Cart from './pages/Cart.jsx'
 import AddAddress from './pages/AddAddress.jsx'
 import MyOrders from './pages/MyOrders.jsx'
+import SellerLogin from './components/seller/SellerLogin.jsx'
 
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
                     <Route path="/mycart" element={<Cart />} />
                     <Route path="addaddress" element={<AddAddress />} />
                     <Route path="myorders" element={<MyOrders />} />
+                    <Route path="seller" element={<SellerLogin />} />
                 </Routes>
                 {!location.includes("seller") && !location.includes("login") && !location.includes("signup") && <Footer />}
         </div>
