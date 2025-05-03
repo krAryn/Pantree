@@ -17,6 +17,7 @@ import SellerLayout from './pages/seller/SellerLayout.jsx'
 import AddProduct from './pages/seller/AddProduct.jsx'
 import ProductsList from './pages/seller/ProductsList.jsx'
 import Orders from './pages/seller/Orders.jsx'
+import Contact from './pages/Contact.jsx'
 
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
                         <Route path="productslist" element={<ProductsList />} />
                         <Route path="orders" element={<Orders />} />
                     </Route>
+                    <Route path="/contact" element={<Contact />} />
                 </Routes>
                 {!location.includes("seller") && !location.includes("login") && !location.includes("signup") && <Footer />}
         </div>
