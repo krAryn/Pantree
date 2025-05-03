@@ -12,7 +12,7 @@ const SellerLogin = () => {
     } = useForm()
 
     const submitData = async () => {
-        return new Promise((res, rej) => {
+        return new Promise((res) => {
             setTimeout(() => {
                 console.log("Successfully Logged In!")
                 res()

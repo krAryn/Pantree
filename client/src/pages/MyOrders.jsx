@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react'
 import { useAppContext } from '../contexts/AppContext'
 
 const MyOrders = () => {
 
-    const {myOrders, setMyOrders} = useAppContext()
+    const {myOrders} = useAppContext()
 
     return (
         <div className='mt-16 flex flex-col px-6 md:px-16 lg:px-32'>
