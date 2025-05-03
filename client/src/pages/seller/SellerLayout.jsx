@@ -1,10 +1,9 @@
-import { useState } from 'react'
 import { useAppContext } from '../../contexts/AppContext';
 import { assets } from '../../assets/assets';
 import { Link, NavLink, Outlet } from 'react-router';
 
 const SellerLayout = () => {
-    const { isSeller, setIsSeller } = useAppContext()
+    const { setIsSeller } = useAppContext()
 
     const sidebarLinks = [
         { name: "Add Product", path: "/seller", icon: assets.add_icon },
@@ -17,7 +16,7 @@ const SellerLayout = () => {
     }
 
     return (
-        <>
+        <div className='h-[100vh] w-[100vw] overflow-hidden'>
             <div className="flex items-center justify-between px-4 md:px-8 border-b border-gray-300 py-3 bg-white">
                 <Link to="/seller">
                     <img className="cursor-pointer w-34 md:w-38" src={assets.logo} alt="dummyLogoColored" />
@@ -29,7 +28,7 @@ const SellerLayout = () => {
             </div>
 
             <div className="flex">
-                <div className="md:w-64 w-16 border-r h-[100vh] min-h-[600px] text-base border-gray-300 pt-4 flex flex-col transition-all duration-300">
+                <div className="md:w-64 w-16 border-r mb-[30px] min-h-[600px] text-base border-gray-300 pt-4 flex flex-col transition-all duration-300">
                     {sidebarLinks.map((item) => (
                         <NavLink to={item.path} 
                             key={item.name}
@@ -44,7 +43,7 @@ const SellerLayout = () => {
                 <Outlet />
             </div>
 
-        </>
+        </div>
     );
 };
 
