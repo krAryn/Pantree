@@ -7,6 +7,16 @@
   --font-poppins: 'Poppins', sans-serif;
 }
 
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 #root {
   max-width: 1900px;
   margin: auto;
