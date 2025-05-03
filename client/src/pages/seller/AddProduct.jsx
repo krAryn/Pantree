@@ -14,7 +14,7 @@ const AddProduct = () => {
     } = useForm()
 
     const submitData = async () => {
-        return new Promise((res, rej) => {
+        return new Promise((res) => {
             setTimeout(() => {
                 console.log("Product Added!")
                 res()
@@ -35,7 +35,7 @@ const AddProduct = () => {
     }
 
     return (
-        <div className="py-10 flex flex-col justify-between bg-white">
+        <div className="no-scrollbar py-10 flex flex-col justify-between bg-white h-[90vh] overflow-y-auto">
             <form onSubmit={handleSubmit(submitHandler)} className="md:p-10 p-4 space-y-5 max-w-lg">
                 <div>
                     <p className="text-base font-medium">Product Image</p>
