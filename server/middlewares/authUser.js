@@ -5,6 +5,7 @@ const authUser = async (req, res, next) => {
 
     try {
         const {token} = req.cookies
+        console.log("Token: ", token)
     
         if (!token) {
             return res.json({success: false, message: "Token not defined!"})
