@@ -1,13 +1,14 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import jwt from jsonwebtoken;
+import jwt from "jsonwebtoken";
 
 // Path: /api/user/register
-const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        if (name || email || password) {
+        if (!name || !email || !password) {
+            console.log(name, " ", email, " ", password, " ")
             return res.json({ success: false, message: "Missing details!" })
         }
 
@@ -27,10 +28,11 @@ const registerUser = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000,
         })
 
-        res.json({success: true, message: "User Registration Complete"})
+        res.json({success: true, message: "User Registration Complete", user: {name, email, password}})
 
     } catch (error) {
         console.log(error.message)
         res.json({success: false, message: error.message})
     }
 }
+
