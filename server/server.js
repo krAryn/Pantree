@@ -2,14 +2,17 @@ import cookieParser from "cookie-parser"
 import express from "express"
 import cors from "cors"
 import 'dotenv/config'
-import connectDB from "./config/db.js"
+import connectDB from "./config/db.config.js"
 import userRouter from "./routes/user.route.js"
 import sellerRouter from "./routes/seller.route.js"
+import connectCloudinary from "./config/cloudinary.config.js"
+import productRoute from "./routes/product.route.js"
 
 const app = express()
 const PORT = process.env.PORT || 4000
 
 await connectDB()
+connectCloudinary()
 
 app.use(express.json())
 app.use(cookieParser())
@@ -21,6 +24,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/user", userRouter)
 app.use("/api/seller", sellerRouter)
+app.use("/api/product", productRoute)
 
 app.post("/", (req, res) => {
     console.log("Data: ", req.body, "\n Cookies: ", req.cookies)
