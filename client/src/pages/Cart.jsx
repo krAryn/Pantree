@@ -13,6 +13,9 @@ const Cart = () => {
         formState: { errors, isSubmitting }
     } = useForm()
 
+    const DELIVERY_CHARGE = 25
+    const HANDLING_CHARGE = 2
+
     const {products, cartItems, removeFromCart, getTotalCartItems, getTotalCartAmount, updateCartItems, navigate, addresses, setAddresses, currentAddress, setCurrentAddress} = useAppContext()
 
     // const productsInCart = [
@@ -162,13 +165,13 @@ const Cart = () => {
                         <span>Price</span><span>₹{getTotalCartAmount()}</span>
                     </p>
                     <p className="flex justify-between">
-                        <span>Delivery Charge</span><span>₹25</span>
+                        <span>Delivery Charge</span><span>₹{DELIVERY_CHARGE}</span>
                     </p>
                     <p className="flex justify-between">
-                        <span>Handling Charges</span><span>₹2</span>
+                        <span>Handling Charges</span><span>₹{HANDLING_CHARGE}</span>
                     </p>
                     <p className="flex justify-between text-lg font-medium mt-3">
-                        <span className='font-semibold'>Total Amount:</span><span className='text-primary'>₹{getTotalCartAmount() + 27}</span>
+                        <span className='font-semibold'>Total Amount:</span><span className='text-primary'>₹{getTotalCartAmount() + DELIVERY_CHARGE + HANDLING_CHARGE}</span>
                     </p>
                 </div>
 
