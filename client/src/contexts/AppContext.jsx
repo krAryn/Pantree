@@ -22,7 +22,6 @@ const AppContextProvider = ({ children }) => {
     const [currentAddress, setCurrentAddress] = useState(addresses[0])
     const [myOrders, setMyOrders] = useState(dummyOrders)
 
-
     const fetchProducts = async () => {
         return Promise.resolve(dummyProducts.filter(product => product.inStock));       // get inStock products 
     }
