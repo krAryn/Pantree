@@ -7,6 +7,7 @@ import userRouter from "./routes/user.route.js"
 import sellerRouter from "./routes/seller.route.js"
 import connectCloudinary from "./config/cloudinary.config.js"
 import productRoute from "./routes/product.route.js"
+import cartRouter from "./routes/cart.route.js"
 
 const app = express()
 const PORT = process.env.PORT || 4000
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 app.use("/api/user", userRouter)
 app.use("/api/seller", sellerRouter)
 app.use("/api/product", productRoute)
+app.use("/api/cart", cartRouter)
 
 app.post("/", (req, res) => {
     console.log("Data: ", req.body, "\n Cookies: ", req.cookies)
