@@ -24,7 +24,7 @@ const AddProduct = () => {
     //     })
     // }
 
-    const {axios, navigate, products, fetchProducts} = useAppContext()
+    const {axios, fetchProducts} = useAppContext()
 
     const submitHandler = async (dataFromForm) => {
         try {

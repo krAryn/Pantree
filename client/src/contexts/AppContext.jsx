@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { dummyProducts, dummyAddress, dummyOrders } from '../assets/assets'
+import { dummyAddress, dummyOrders } from '../assets/assets'
 import toast, { Toaster } from "react-hot-toast"
 import axios from "axios"
 

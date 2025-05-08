@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
 import { useAppContext } from '../../contexts/AppContext';
-import { dummyProducts } from '../../assets/assets';
 import toast from 'react-hot-toast';
 
 const ProductsList = () => {
