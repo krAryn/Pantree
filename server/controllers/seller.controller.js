@@ -18,7 +18,7 @@ export const sellerLogin = async (req, res) => {
         res.cookie("sellerToken", sellerToken, {
             httpOnly: true, 
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: "/api/seller/"
+            path: "/api/"
         })
         return res.json({success: true, message: "Seller is Valid"})
 
@@ -29,7 +29,7 @@ export const sellerLogin = async (req, res) => {
 
 }
 
-// Path: /api/seller/sellerIsAuth
+// Path: /api/seller/is-Auth
 
 export const sellerIsAuth = async (req, res) => {
     try {

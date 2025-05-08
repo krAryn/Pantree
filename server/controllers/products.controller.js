@@ -4,8 +4,10 @@ import { v2 as cloudinary } from "cloudinary"
 // Add product: /api/product/add
 export const addProduct = async (req, res) => {
     try {
-        const productData = req.body.productData
+        const productData = JSON.parse(req.body.productData)
         const images = req.files;
+
+        console.log(typeof productData)
 
         const imagesUrl = []
 
@@ -15,6 +17,8 @@ export const addProduct = async (req, res) => {
             })
             imagesUrl.push(result.secure_url)
         }
+
+        console.log(imagesUrl)
 
         console.log("ProductData: ", productData)
         console.log("ImagesUrl: ", imagesUrl)
@@ -54,10 +58,13 @@ export const productById = async (req, res) => {
 
 // Toggle stock of product: /api/product/stock
 export const changeStock = async (req, res) => {
+    
     try {
-        const { productId, inStock } = req.body
-        const product = await Product.findByIdAndUpdate(productId, {inStock})
-        res.json({success: true, messagee: "Stock Updated", product})
+        const { id, inStock } = req.body
+
+        const product = await Product.findByIdAndUpdate(id, {inStock})
+        console.log("Stock after: ", product)
+        res.json({success: true, message: "Stock Updated", product})
     } catch (error) {
         console.log(error.message)
         res.json({ success: false, message: error.message })

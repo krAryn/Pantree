@@ -17,9 +17,14 @@ const PORT = process.env.PORT || 4000
 await connectDB()
 connectCloudinary()
 
+var corsOptions = {
+    origin: ["http://localhost:5173"],
+    credentials: true
+}
+
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
 
 app.get("/", (req, res) => {
     return res.send("API IS RUNNING, SUCCESSFULLY!")

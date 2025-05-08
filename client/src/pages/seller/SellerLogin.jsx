@@ -1,9 +1,10 @@
 import { useAppContext } from '../../contexts/AppContext'
 import { useForm } from "react-hook-form"
+import toast from 'react-hot-toast'
 
 const SellerLogin = () => {
 
-    const { isSeller } = useAppContext()
+    const { isSeller, setIsSeller, axios, navigate } = useAppContext()
 
     const {
         register,
@@ -11,21 +12,37 @@ const SellerLogin = () => {
         formState: { errors, isSubmitting }
     } = useForm()
 
-    const submitData = async () => {
-        return new Promise((res) => {
-            setTimeout(() => {
-                console.log("Successfully Logged In!")
-                res()
-            }, 2000)
-        })
-    }
+    // const submitData = async () => {
+    //     return new Promise((res) => {
+    //         setTimeout(() => {
+    //             console.log("Successfully Logged In!")
+    //             res()
+    //         }, 2000)
+    //     })
+    // }
 
-    const submitHandler = async (data) => {
-        if (!String(data.email).includes("@")) {
+    const submitHandler = async (formData) => {
+        if (!String(formData.email).includes("@")) {
             console.log("Enter valid email address")
         } else {
-            console.log(data)
-            await submitData()
+            console.log(formData)
+            // await submitData()
+            try {
+                const {data} = await axios.post("/api/seller/login", {
+                    email: formData.email,
+                    password: formData.password
+                })
+
+                if (data.success) {
+                    setIsSeller(true)
+                    navigate("/seller")
+                } else {
+                    toast.error(data.message)
+                }formData
+
+            } catch (error) {
+                toast.error(error.message)
+            }
         }
     }
 

@@ -5,7 +5,7 @@ import authSeller from "../middlewares/seller.auth.js"
 
 const productRoute = express.Router()
 
-productRoute.post("/add", authSeller,upload.array("images", 2), addProduct)
+productRoute.post("/add", authSeller, upload.array("images", 4), addProduct)
 productRoute.get("/list", productList)
 productRoute.post("/id", productById)
 productRoute.post("/stock", changeStock)

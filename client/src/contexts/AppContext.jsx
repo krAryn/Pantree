@@ -16,19 +16,47 @@ const MAX_PER_ITEM_LIMIT = 5;
 
 const AppContextProvider = ({ children }) => {
 
-    const [user, setUser] = useState(true)      // user stores user id or null if user isn't logged in 
-    const [isSeller, setIsSeller] = useState(true)     // if the user is Seller then isSeller is true.
+    const [user, setUser] = useState()      // user stores user id or null if user isn't logged in 
+    const [isSeller, setIsSeller] = useState()     // if the user is Seller then isSeller is true.
     const navigate = useNavigate()
     const location = useLocation();
-    const [products, setProducts] = useState()
+    const [products, setProducts] = useState([])
     const [searchQuery, setSearchQuery] = useState()
     const [addresses, setAddresses] = useState(dummyAddress)
     const [currentAddress, setCurrentAddress] = useState(addresses[0])
     const [myOrders, setMyOrders] = useState(dummyOrders)
 
     const fetchProducts = async () => {
-        return Promise.resolve(dummyProducts.filter(product => product.inStock));       // get inStock products 
+
+        try {
+            const {data} = await axios.get("/api/product/list")
+            if (data.success) {
+                console.log(data.products)
+                setProducts(data.products.filter(product => product.inStock));       // get inStock products 
+            } else {
+                toast.error("Database error!")
+                console.log("Database error")
+                // return Promise.reject()
+            }
+        } catch (error) {
+            toast.error(error.message)
+            console.log(error.message)
+            // return Promise.reject()
+        }
     }
+
+    const fetchSeller = async () => {
+        try {
+            const {data} = await axios.get("/api/seller/is-auth")
+            setIsSeller(data.success)
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    useEffect(() => {
+        fetchSeller()
+    }, [])
 
     const [cartItems, setCartItems] = useState({})
 
@@ -90,22 +118,19 @@ const AppContextProvider = ({ children }) => {
         setCartItems(newCartData);
     }
 
-    const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, addresses, setAddresses, currentAddress, setCurrentAddress, myOrders, setMyOrders, axios}
+    const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, addresses, setAddresses, currentAddress, setCurrentAddress, myOrders, setMyOrders, axios, fetchProducts}
 
 
     useEffect(() => {
-        fetchProducts().then(productsList => {
-            let filteredProducts = [];
-            // if searchQuery is set then filer out the searchQuery from products array and assign it to filteredProduct else directly assign products array to filteredProducts
-
+        fetchProducts()
+            let filteredProducts = []
             if (searchQuery) {
-                filteredProducts = Array.from(productsList).filter((product) => String(product.name).toLowerCase().includes(searchQuery.toLowerCase()))
+                filteredProducts = Array.from(products).filter((product) => String(product.name).toLowerCase().includes(searchQuery.toLowerCase()))
             } else {
-                filteredProducts = [...productsList]
+                filteredProducts = [...products]
             }
 
             setProducts(filteredProducts)
-        })
     }, [searchQuery])
 
     useEffect(() => {

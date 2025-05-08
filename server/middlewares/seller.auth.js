@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
 
 const authSeller = async (req, res, next) => {
+    console.log("Seller authentication middleware")
     const {sellerToken} = req.cookies;
 
     try {

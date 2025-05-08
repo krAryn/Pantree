@@ -1,31 +1,65 @@
 import {useState} from 'react'
 import {useForm} from "react-hook-form"
 import { assets, categories } from '../../assets/assets';
+import { useAppContext } from '../../contexts/AppContext';
+import toast from 'react-hot-toast';
 
 const AddProduct = () => {
 
     const [imageFiles, setImageFiles] = useState([])
-    console.log("add product rendering")
 
     const {
         register,
         handleSubmit,
+        reset,
         formState: {errors, isSubmitting}
     } = useForm()
 
-    const submitData = async () => {
-        return new Promise((res) => {
-            setTimeout(() => {
-                console.log("Product Added!")
-                res()
-            }, 2000)
-        })
-    }
+    // const submitData = async () => {
+    //     return new Promise((res) => {
+    //         setTimeout(() => {
+    //             console.log("Product Added!")
+    //             res()
+    //         }, 2000)
+    //     })
+    // }
 
-    const submitHandler = async (data) => {
-        data["imageFiles"] = imageFiles
-        console.log(data)
-        await submitData()
+    const {axios, navigate, products, fetchProducts} = useAppContext()
+
+    const submitHandler = async (dataFromForm) => {
+        try {
+            const productData = {
+                name: dataFromForm.name,
+                category: dataFromForm.category,
+                price: dataFromForm.price,
+                offerPrice: dataFromForm.offerPrice,
+                description: dataFromForm.description.split("\n"),
+            }
+            // console.log(productData)
+            const formData = new FormData()
+    
+            formData.append("productData", JSON.stringify(productData))
+    
+            for (let imageFile of imageFiles) {
+                formData.append("images", imageFile)
+            }
+    
+            const {data} = await axios.post("/api/product/add", formData)
+    
+            console.log(data)
+            if (data.success) {
+                toast.success(data.message)
+                // navigate("/seller")
+                reset()
+                setImageFiles([])
+                fetchProducts()
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+
     }
 
     const validate = () => {
@@ -50,7 +84,6 @@ const AddProduct = () => {
                                         const imageFilesTemp = [...imageFiles]
                                         imageFilesTemp[index] = e.currentTarget.files[0]
                                         setImageFiles(imageFilesTemp)
-                                        imageFiles[index] && console.log(URL.createObjectURL(imageFiles[index]))
                                     }}
                                 />
                                 <img className="max-w-24 cursor-pointer" src={imageFiles[index] ? URL.createObjectURL(imageFiles[index]): assets.upload_area} alt="uploadArea" width={100} height={100} />
@@ -65,7 +98,7 @@ const AddProduct = () => {
                         type="text" 
                         placeholder="Type here" 
                         className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-                        {...register("productName", {required: "Please Enter a product Name!"})}
+                        {...register("name", {required: "Please Enter a product Name!"})}
                         />
                 </div>
                 <div className="flex flex-col gap-1 max-w-md">
@@ -75,7 +108,7 @@ const AddProduct = () => {
                         rows={4} 
                         className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40 resize-none" 
                         placeholder="Type here"
-                        {...register("productDescription", {required: "Please Enter a product Description!"})}
+                        {...register("description", {required: "Please Enter a product Description!"})}
                         >
                     </textarea>
                 </div>
@@ -100,7 +133,7 @@ const AddProduct = () => {
                             type="number" 
                             placeholder="0" 
                             className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
-                            {...register("productPrice", {required: "Please Enter Product Price!"})}
+                            {...register("price", {required: "Please Enter Product Price!"})}
                             />
                     </div>
                     <div className="flex-1 flex flex-col gap-1 w-32">
