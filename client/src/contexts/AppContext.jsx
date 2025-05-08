@@ -2,6 +2,10 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { dummyProducts, dummyAddress, dummyOrders } from '../assets/assets'
 import toast, { Toaster } from "react-hot-toast"
+import axios from "axios"
+
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL
+axios.defaults.withCredentials = true
 
 const AppContext = createContext()
 const useAppContext = () => {
@@ -86,7 +90,7 @@ const AppContextProvider = ({ children }) => {
         setCartItems(newCartData);
     }
 
-    const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, addresses, setAddresses, currentAddress, setCurrentAddress, myOrders, setMyOrders}
+    const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, addresses, setAddresses, currentAddress, setCurrentAddress, myOrders, setMyOrders, axios}
 
 
     useEffect(() => {
