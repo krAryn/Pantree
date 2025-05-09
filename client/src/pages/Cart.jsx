@@ -17,13 +17,6 @@ const Cart = () => {
     const HANDLING_CHARGE = 2
     
     const {products, cartItems, setCartItems, removeFromCart, getTotalCartItems, getTotalCartAmount, updateCartItems, navigate, currentAddress, setCurrentAddress, addresses, user, axios} = useAppContext()
-    
-    // console.log("Current Address: ", currentAddress)
-    // const productsInCart = [
-    //     { name: "Running Shoes", description: ["Lightweight and comfortable", "Breathable mesh upper", "Ideal for jogging and casual wear"], offerPrice: 250, price: 200, quantity: 1, size: 42, image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage.png", category: "Footwear", },
-    //     { name: "Running Shoes", description: ["Lightweight and comfortable", "Breathable mesh upper", "Ideal for jogging and casual wear"], offerPrice: 250, price: 200, quantity: 1, size: 42, image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage2.png", category: "Footwear", },
-    //     { name: "Running Shoes", description: ["Lightweight and comfortable", "Breathable mesh upper", "Ideal for jogging and casual wear"], offerPrice: 250, price: 200, quantity: 1, size: 42, image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage3.png", category: "Footwear", },
-    // ]
 
     const [productsInCart, setProductsInCart] = useState()
     const [paymentMode, setPaymentMode] = useState("none");
@@ -59,15 +52,11 @@ const Cart = () => {
                         toast.success(data.message)
                         setCartItems({})
                         navigate("/myorders")
-                        navigate(0)
+                        // navigate(0)
                     } else {
                         toast.error(data.message)
                     }
                 }
-
-                // console.log("User: ", user)
-                // console.log("cartItems: ", productsInCart)
-                // console.log("current Address: ", currentAddress)
             }
         } catch (error) {
             toast.error(error.message)
@@ -161,7 +150,14 @@ const Cart = () => {
                                     {address.street}, {address.city}, {address.state}, {address.zipcode}
                                 </p>)
                                 })}
-                                <p onClick={() => navigate("/addaddress")} className="text-primary text-center cursor-pointer p-2 hover:bg-primary-dull hover:text-white">
+                                <p onClick={() => {
+                                        if (!user) {
+                                            toast.error("Please Log In to Continue!", {duration: 1000})
+                                            setShowAddress(false)
+                                        } else {
+                                            navigate("/addaddress")
+                                        }
+                                    }} className="text-primary text-center cursor-pointer p-2 hover:bg-primary-dull hover:text-white">
                                     Add address
                                 </p>
                             </div>

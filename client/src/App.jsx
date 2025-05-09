@@ -42,9 +42,9 @@ const App = () => {
                     <Route path="/login" element={user? <HomeNavigation /> :<Login />} />
                     <Route path="/signup" element={user? <HomeNavigation /> :<SignUp />} />
                     <Route path="/allproducts" element={<AllProducts />} />
-                    {products.length > 0  && <Route path="/allproducts/:category" element={<ProductCategory />} />}
-                    {products.length > 0 && <Route path="/allproducts/:category/:id" element={<ProductDetails/>} />}
-                    {products.length > 0 && <Route path="/mycart" element={<Cart />} />}
+                    {products && <Route path="/allproducts/:category" element={<ProductCategory />} />}
+                    {products && <Route path="/allproducts/:category/:id" element={<ProductDetails/>} />}
+                    {products && <Route path="/mycart" element={<Cart />} />}
                     <Route path="/addaddress" element={<AddAddress />} />
                     <Route path="/myorders" element={<MyOrders />} />
                     <Route path="/seller" element={isSeller ? <SellerLayout /> :<SellerLogin />}>

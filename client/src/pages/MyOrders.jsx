@@ -1,10 +1,16 @@
+import { useEffect } from 'react'
 import { useAppContext } from '../contexts/AppContext'
 
 const MyOrders = () => {
 
-    const {myOrders} = useAppContext()
+    const {myOrders, fetchUserOrder} = useAppContext()
 
-    console.log("My Orders page rendering!")
+    // console.log("My Orders page rendering!")
+
+    useEffect(() => {
+        console.log("This is my orders rendering")
+        fetchUserOrder()
+    }, [])
 
     return (
         <div className='mt-16 flex flex-col px-6 md:px-16 lg:px-32'>

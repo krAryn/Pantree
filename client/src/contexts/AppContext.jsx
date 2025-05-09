@@ -20,36 +20,48 @@ const AppContextProvider = ({ children }) => {
     const [isSeller, setIsSeller] = useState()     // if the user is Seller then isSeller is true.
     const navigate = useNavigate()
     const location = useLocation();
-    const [products, setProducts] = useState([])
+    const [products, setProducts] = useState()
     const [searchQuery, setSearchQuery] = useState()
     const [myOrders, setMyOrders] = useState([])
     const [cartItems, setCartItems] = useState({})
-    const [addresses, setAddresses] = useState()
+    const [addresses, setAddresses] = useState([])
 
-    
+
     // fetch addresses from /api/address/get and assign it to addresses
     const [currentAddress, setCurrentAddress] = useState()
 
-    
+
     useEffect(() => {
-        (async () => {
-            const {data} = await axios.post("/api/address/get", {})
-            // console.log("This is address", data.addresses)
-            setCurrentAddress(data.addresses[0])
-            setAddresses(data.addresses)
-        })()
+
+        try {
+            if (user) {
+                (async () => {
+                    const { data } = await axios.post("/api/address/get", {})
+    
+                    if (data.success) {
+                        setCurrentAddress(data.addresses[0])
+                        setAddresses(data.addresses)
+                    } else {
+                        toast.error(data.message)
+                    }
+    
+                })()
+            }
+
+        } catch (error) {
+            toast.error(error.message)
+        }
+
         // on first render first address 
     }, [])
 
     // -----------------------------------------------------------------------------------------------------------
-    
+
     const fetchProducts = async () => {
-        // console.log("Products are fetched")
 
         try {
-            const {data} = await axios.get("/api/product/list")
+            const { data } = await axios.get("/api/product/list")
             if (data.success) {
-                // console.log(data.products)
                 setProducts(data.products.filter(product => product.inStock));       // get inStock products 
             } else {
                 toast.error("Database error!")
@@ -65,7 +77,7 @@ const AppContextProvider = ({ children }) => {
 
     const fetchSeller = async () => {
         try {
-            const {data} = await axios.get("/api/seller/is-auth")
+            const { data } = await axios.get("/api/seller/is-auth")
             setIsSeller(data.success)
         } catch (error) {
             console.log(error.message)
@@ -74,9 +86,8 @@ const AppContextProvider = ({ children }) => {
 
     const fetchUser = async () => {
         try {
-            const {data} = await axios.post("/api/user/is-auth", {})
+            const { data } = await axios.post("/api/user/is-auth", {})
             if (data.success) {
-                // console.log("User Data: ", data)
                 setUser(data.currentUser)
                 setCartItems(data.currentUser.cartItems)
             } else {
@@ -87,14 +98,9 @@ const AppContextProvider = ({ children }) => {
         }
     }
 
-    // console.log("App context rendering!")
-    // console.log(myOrders)
-
     const fetchUserOrder = async () => {
         try {
-            // console.log("fetch User Order **********************************************")
-            const {data} = await axios.post("/api/order/user", {})
-            console.log("Data: ", data)
+            const { data } = await axios.post("/api/order/user", {})
             if (data.success) {
                 setMyOrders(data.orders)
             }
@@ -106,10 +112,8 @@ const AppContextProvider = ({ children }) => {
     useEffect(() => {
         fetchSeller()
         fetchUser()
-        fetchUserOrder()
+        fetchProducts()
     }, [])
-
-    // console.log(user)
 
 
     const getTotalCartItems = () => {
@@ -123,7 +127,7 @@ const AppContextProvider = ({ children }) => {
 
     const getTotalCartAmount = () => {
         let total = 0;
-        for(let item in cartItems) {
+        for (let item in cartItems) {
             total += cartItems[item] * products.find(product => product._id === item).offerPrice
         }
         return Math.floor(total);
@@ -134,7 +138,7 @@ const AppContextProvider = ({ children }) => {
         if (user) {
             (async () => {
                 try {
-                    const {data} = await axios.post("/api/cart/update", {cartItems})
+                    const { data } = await axios.post("/api/cart/update", { cartItems })
                     if (!data.success) {
                         toast.error(data.message)
                     }
@@ -147,26 +151,24 @@ const AppContextProvider = ({ children }) => {
     }, [cartItems])
 
     const addToCart = (itemId) => {
-        
+
         if (cartItems[itemId] === MAX_PER_ITEM_LIMIT) {
-            toast.error(`Maximum ${MAX_PER_ITEM_LIMIT} units per item is allowed at one time`, {duration: 1500})
+            toast.error(`Maximum ${MAX_PER_ITEM_LIMIT} units per item is allowed at one time`, { duration: 1500 })
         } else {
-            let newCartData = {...cartItems};
-            if(newCartData[itemId]) {
+            let newCartData = { ...cartItems };
+            if (newCartData[itemId]) {
                 newCartData[itemId] += 1
             } else {
                 newCartData[itemId] = 1;
             }
             setCartItems(newCartData);
-            toast.success("Added to your Cart!", {duration: 1000})
+            toast.success("Added to your Cart!", { duration: 1000 })
         }
-        
+
     }
 
-    // console.log("Cart Items: ", cartItems)
-
     const removeFromCart = (itemId) => {
-        let newCartData = {...cartItems};
+        let newCartData = { ...cartItems };
         if (newCartData[itemId]) {
             if (newCartData[itemId] === 1) {
                 newCartData[itemId] = undefined;
@@ -175,11 +177,11 @@ const AppContextProvider = ({ children }) => {
             }
         }
         setCartItems(newCartData);
-        toast.success("Removed from your Cart!", {duration: 1000})
+        toast.success("Removed from your Cart!", { duration: 1000 })
     }
 
     const updateCartItems = (itemId, no) => {
-        let newCartData = {...cartItems};
+        let newCartData = { ...cartItems };
 
         if (no === undefined) {
             delete newCartData[itemId];
@@ -187,24 +189,25 @@ const AppContextProvider = ({ children }) => {
             newCartData[itemId] = no;
         }
         setCartItems(newCartData);
-        toast.success("Cart Updated!", {duration: 1000})
+        toast.success("Cart Updated!", { duration: 1000 })
     }
 
-    const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, currentAddress, setCurrentAddress, myOrders, setMyOrders, axios, fetchProducts, addresses, setCartItems}
-
     useEffect(() => {
-        fetchProducts()
-            let filteredProducts = []
+        let filteredProducts = []
+
+        if (products) {
             if (searchQuery) {
                 filteredProducts = Array.from(products).filter((product) => String(product.name).toLowerCase().includes(searchQuery.toLowerCase()))
             } else {
                 filteredProducts = [...products]
             }
-
-            // console.log("search query changed")
-
             setProducts(filteredProducts)
+        }
+
     }, [searchQuery])
+
+    const value = { user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, currentAddress, setCurrentAddress, myOrders, setMyOrders, axios, fetchProducts, addresses, setCartItems, fetchUserOrder, fetchSeller, fetchUser }
+
 
     return (
         <AppContext.Provider value={value}>

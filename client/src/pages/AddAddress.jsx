@@ -5,7 +5,9 @@ import { useForm } from "react-hook-form"
 import { useAppContext } from '../contexts/AppContext'
 
 const AddAddress = () => {
-    const { setCurrentAddress, axios, navigate } = useAppContext();
+    const { setCurrentAddress, axios, navigate, user } = useAppContext();
+
+
 
     const {
         register,

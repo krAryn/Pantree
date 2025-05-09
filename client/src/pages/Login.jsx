@@ -24,7 +24,7 @@ const Login = () => {
                 const {data} = await axios.post("/api/user/login", {email: userData.email, password: userData.password})
                 if (data.success) {
                     setUser(data.currentUser)
-                    navigate(0)
+                    // navigate(0)
                     navigate("/")
                 } else {
                     toast.error(data.message)

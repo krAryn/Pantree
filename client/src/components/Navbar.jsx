@@ -20,7 +20,7 @@ const Navbar = () => {
                 toast.success(data.message)
                 setOpen(false)
                 setUser(null)
-                navigate(0)
+                // navigate(0)
                 navigate("/home")
             } else {
                 toast.error(data.message)
