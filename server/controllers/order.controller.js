@@ -18,15 +18,15 @@ export const placeOrderCOD = async (req, res) => {
             amount += item.quantity * product.offerPrice
         }
 
-        await Order.create({
+        const order = await Order.create({
             userId,
             items,
             amount,
             address,
-            paymentTyep: "COD",
+            paymentType: "COD",
         })
 
-        return res.json({success: true, message: "Order Placed"})
+        return res.json({success: true, message: "Order Placed", order})
     } catch (error) {
         console.log(error.message)
         return res.json({success: "false", message: error.message})
@@ -37,6 +37,7 @@ export const placeOrderCOD = async (req, res) => {
 export const getUserOrder = async (req, res) => {
     try {
         const {userId} = req.body
+        console.log("user id: ", userId)
         const orders = await Order.find({
             userId,
             $or: [{paymentType: "COD"}, {isPaid: true}]

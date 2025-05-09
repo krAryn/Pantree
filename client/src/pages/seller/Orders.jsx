@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAppContext } from '../../contexts/AppContext';
 import { assets } from '../../assets/assets';
+import toast from 'react-hot-toast';
 
 const Orders = () => {
   // const boxIcon = "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/e-commerce/boxIcon.svg"
@@ -11,8 +12,26 @@ const Orders = () => {
   //     { id: 1, items: [{ product: { name: "Nike Air Max 270" }, quantity: 1 }], address: { firstName: "John", lastName: "Doe", street: "123 Main St", city: "New York", state: "NY", zipcode: "10001", country: "USA"}, amount: 320.0, paymentType: "Credit Card", orderDate: "10/10/2022", isPaid: true },
   // ];
 
-  const {myOrders} = useAppContext()
-  const orders = myOrders
+  const {axios} = useAppContext()
+
+  const [orders, setOrders] = useState([])
+
+  const fetchOrders = async () => {
+    try {
+        const {data} = await axios.post("/api/order/seller", {})
+        if (data.success) {
+            setOrders(data.orders)
+        } else {
+            toast.error(data.message)
+        }
+    } catch (error) {
+        toast.error(error.message)
+    }
+  }
+
+  useEffect(() => {
+      fetchOrders();
+  }, [])
 
   return (
       <div className="bota md:p-10 p-4 space-y-4 h-[90vh] overflow-y-auto no-scrollbar w-[100%]">

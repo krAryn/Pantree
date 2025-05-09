@@ -38,7 +38,7 @@ app.use("/api/address", addressRouter)
 app.use("/api/order", orderRouter)
 
 app.post("/", (req, res) => {
-    console.log("Data: ", req.body, "\n Cookies: ", req.cookies)
+    // console.log("Data: ", req.body, "\n Cookies: ", req.cookies)
     res.send("data received!")
 })
 

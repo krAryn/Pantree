@@ -6,18 +6,19 @@ import { assets } from '../assets/assets'
 
 const Cart = () => {
     const [showAddress, setShowAddress] = useState(false)
-
+    
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting }
     } = useForm()
-
+    
     const DELIVERY_CHARGE = 25
     const HANDLING_CHARGE = 2
-
-    const {products, cartItems, removeFromCart, getTotalCartItems, getTotalCartAmount, updateCartItems, navigate, addresses, setAddresses, currentAddress, setCurrentAddress} = useAppContext()
-
+    
+    const {products, cartItems, setCartItems, removeFromCart, getTotalCartItems, getTotalCartAmount, updateCartItems, navigate, currentAddress, setCurrentAddress, addresses, user, axios} = useAppContext()
+    
+    // console.log("Current Address: ", currentAddress)
     // const productsInCart = [
     //     { name: "Running Shoes", description: ["Lightweight and comfortable", "Breathable mesh upper", "Ideal for jogging and casual wear"], offerPrice: 250, price: 200, quantity: 1, size: 42, image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage.png", category: "Footwear", },
     //     { name: "Running Shoes", description: ["Lightweight and comfortable", "Breathable mesh upper", "Ideal for jogging and casual wear"], offerPrice: 250, price: 200, quantity: 1, size: 42, image: "https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/card/productImage2.png", category: "Footwear", },
@@ -38,19 +39,39 @@ const Cart = () => {
             prodInCart.push(product)
         }
 
-        console.log("cart is rendered")
-
         setProductsInCart(prodInCart)
     }, [cartItems])
 
     // placing order simulator
     const placeOrder = async () => {
-        return new Promise ((res, rej) => {
-            setTimeout(() => {
-                console.log("Order Placed")
-                res();
-            }, 2000)
-        })
+        try {
+            if (!currentAddress) {
+                toast.error("Please select a Delivery Address!")
+            } else {
+                if (paymentMode === "COD") {
+                    const {data} = await axios.post("/api/order/cod", {
+                        userId: user._id,
+                        items: productsInCart.map(item => ({product: item._id, quantity: item.quantity})),
+                        address: currentAddress._id
+                    })
+
+                    if (data.success) {
+                        toast.success(data.message)
+                        setCartItems({})
+                        navigate("/myorders")
+                        navigate(0)
+                    } else {
+                        toast.error(data.message)
+                    }
+                }
+
+                // console.log("User: ", user)
+                // console.log("cartItems: ", productsInCart)
+                // console.log("current Address: ", currentAddress)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
 
     const placeOrderHandler = async (data) => {
@@ -61,8 +82,6 @@ const Cart = () => {
             await placeOrder()
         }
     }
-
-    console.log("Cart Items: ", productsInCart)
 
     return productsInCart && (
         <div className="flex flex-col md:flex-row pt-16 max-w-7xl w-full px-6 md:px-16 lg:px-32 mx-auto">
@@ -107,7 +126,7 @@ const Cart = () => {
                         <button className="cursor-pointer mx-auto" onClick={
                             () => {
                                 updateCartItems(product._id, undefined)
-                                console.log(cartItems)
+                                // console.log(cartItems)
                             }
                         }>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -137,7 +156,7 @@ const Cart = () => {
                         </button>
                         {showAddress && (
                             <div className="absolute top-12 py-1 bg-white border border-gray-300 text-sm w-full">
-                                {addresses.map((address, index) => {
+                                {Array.from(addresses).map((address, index) => {
                                 return (<p key={index} onClick={() => {setCurrentAddress(address); setShowAddress(false)}} className="text-gray-500 p-2 hover:bg-gray-100">
                                     {address.street}, {address.city}, {address.state}, {address.zipcode}
                                 </p>)

@@ -82,7 +82,6 @@ export const loginUser = async (req, res) => {
 
 // Path: /api/user/is-auth
 export const isAuth = async (req, res) => {
-    console.log("Under controller")
     try {
         const {userId} = req.body
         const user = await User.findById(userId)

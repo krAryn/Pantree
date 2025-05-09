@@ -22,11 +22,27 @@ const AppContextProvider = ({ children }) => {
     const location = useLocation();
     const [products, setProducts] = useState([])
     const [searchQuery, setSearchQuery] = useState()
-    const [addresses, setAddresses] = useState(dummyAddress)
-    const [currentAddress, setCurrentAddress] = useState(addresses[0])
-    const [myOrders, setMyOrders] = useState(dummyOrders)
+    const [myOrders, setMyOrders] = useState([])
     const [cartItems, setCartItems] = useState({})
+    const [addresses, setAddresses] = useState()
 
+    
+    // fetch addresses from /api/address/get and assign it to addresses
+    const [currentAddress, setCurrentAddress] = useState()
+
+    
+    useEffect(() => {
+        (async () => {
+            const {data} = await axios.post("/api/address/get", {})
+            // console.log("This is address", data.addresses)
+            setCurrentAddress(data.addresses[0])
+            setAddresses(data.addresses)
+        })()
+        // on first render first address 
+    }, [])
+
+    // -----------------------------------------------------------------------------------------------------------
+    
     const fetchProducts = async () => {
         // console.log("Products are fetched")
 
@@ -67,14 +83,33 @@ const AppContextProvider = ({ children }) => {
                 toast.error(data.message)
             }
         } catch (error) {
-            console.log(error)
+            console.log(error.message)
+        }
+    }
+
+    // console.log("App context rendering!")
+    // console.log(myOrders)
+
+    const fetchUserOrder = async () => {
+        try {
+            // console.log("fetch User Order **********************************************")
+            const {data} = await axios.post("/api/order/user", {})
+            console.log("Data: ", data)
+            if (data.success) {
+                setMyOrders(data.orders)
+            }
+        } catch (error) {
+            console.log(error.message)
         }
     }
 
     useEffect(() => {
         fetchSeller()
         fetchUser()
+        fetchUserOrder()
     }, [])
+
+    // console.log(user)
 
 
     const getTotalCartItems = () => {
@@ -128,7 +163,7 @@ const AppContextProvider = ({ children }) => {
         
     }
 
-    console.log("Cart Items: ", cartItems)
+    // console.log("Cart Items: ", cartItems)
 
     const removeFromCart = (itemId) => {
         let newCartData = {...cartItems};
@@ -155,7 +190,7 @@ const AppContextProvider = ({ children }) => {
         toast.success("Cart Updated!", {duration: 1000})
     }
 
-    const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, addresses, setAddresses, currentAddress, setCurrentAddress, myOrders, setMyOrders, axios, fetchProducts}
+    const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, currentAddress, setCurrentAddress, myOrders, setMyOrders, axios, fetchProducts, addresses, setCartItems}
 
     useEffect(() => {
         fetchProducts()
@@ -166,19 +201,10 @@ const AppContextProvider = ({ children }) => {
                 filteredProducts = [...products]
             }
 
-            console.log("search query changed")
+            // console.log("search query changed")
 
             setProducts(filteredProducts)
     }, [searchQuery])
-
-    useEffect(() => {
-        // fetch addresses and set state;
-        
-    }, [addresses])
-
-    useEffect(() => {
-        // set current address and put it at index 0 in addresses 
-    }, [currentAddress])
 
     return (
         <AppContext.Provider value={value}>

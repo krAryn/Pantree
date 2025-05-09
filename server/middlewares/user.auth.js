@@ -5,7 +5,6 @@ const authUser = async (req, res, next) => {
 
     try {
         const {token} = req.cookies
-        console.log("User Token: ", token)
 
     
         if (token) {

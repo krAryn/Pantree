@@ -4,6 +4,8 @@ const MyOrders = () => {
 
     const {myOrders} = useAppContext()
 
+    console.log("My Orders page rendering!")
+
     return (
         <div className='mt-16 flex flex-col px-6 md:px-16 lg:px-32'>
             <div className='flex flex-col items-end w-max mb-8'>

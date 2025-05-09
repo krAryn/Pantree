@@ -13,10 +13,10 @@ const ProductsList = () => {
     }
 
     const toggleStock = async (id, inStock) => {
-        console.log("Id of product: ", id, " ", inStock)
+        // console.log("Id of product: ", id, " ", inStock)
         try {
             const {data} = await axios.post("/api/product/stock", {id, inStock})
-            console.log(data)
+            // console.log(data)
             if (data.success) {
                 fetchProducts()
                 toast.success(data.message)

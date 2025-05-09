@@ -46,7 +46,7 @@ const AddProduct = () => {
     
             const {data} = await axios.post("/api/product/add", formData)
     
-            console.log(data)
+            // console.log(data)
             if (data.success) {
                 toast.success(data.message)
                 // navigate("/seller")

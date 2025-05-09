@@ -23,9 +23,9 @@ const SellerLogin = () => {
 
     const submitHandler = async (formData) => {
         if (!String(formData.email).includes("@")) {
-            console.log("Enter valid email address")
+            toast.error("Enter valid email address")
         } else {
-            console.log(formData)
+            // console.log(formData)
             // await submitData()
             try {
                 const {data} = await axios.post("/api/seller/login", {
@@ -35,6 +35,7 @@ const SellerLogin = () => {
 
                 if (data.success) {
                     setIsSeller(true)
+                    navigate(0)
                     navigate("/seller")
                 } else {
                     toast.error(data.message)

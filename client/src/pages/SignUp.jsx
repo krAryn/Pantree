@@ -33,8 +33,8 @@ const SignUp = () => {
                 const {data} = await axios.post("/api/user/register", {name: userData.fullname, email: userData.email, password: userData.password})
                 if (data.success) {
                     setUser(data.currentUser)
-                    navigate("/")
                     navigate(0)                 // it re-renders the navigated page
+                    navigate("/")
                 } else {
                     toast.error(data.message)
                 }

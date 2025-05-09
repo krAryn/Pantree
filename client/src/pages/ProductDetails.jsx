@@ -12,9 +12,9 @@ const ProductDetails = () => {
     const [relatedProducts, setRelatedProducts] = useState()
 
     const prod  = products.find(item => item._id === id);
-    console.log(prod)
+    // console.log(prod)
 
-    console.log("in ", products)
+    // console.log("in ", products)
     const [thumbnail, setThumbnail] = useState();
 
     useEffect(() => {
