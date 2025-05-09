@@ -25,13 +25,15 @@ const AppContextProvider = ({ children }) => {
     const [addresses, setAddresses] = useState(dummyAddress)
     const [currentAddress, setCurrentAddress] = useState(addresses[0])
     const [myOrders, setMyOrders] = useState(dummyOrders)
+    const [cartItems, setCartItems] = useState({})
 
     const fetchProducts = async () => {
+        // console.log("Products are fetched")
 
         try {
             const {data} = await axios.get("/api/product/list")
             if (data.success) {
-                console.log(data.products)
+                // console.log(data.products)
                 setProducts(data.products.filter(product => product.inStock));       // get inStock products 
             } else {
                 toast.error("Database error!")
@@ -54,11 +56,26 @@ const AppContextProvider = ({ children }) => {
         }
     }
 
+    const fetchUser = async () => {
+        try {
+            const {data} = await axios.post("/api/user/is-auth", {})
+            if (data.success) {
+                // console.log("User Data: ", data)
+                setUser(data.currentUser)
+                setCartItems(data.currentUser.cartItems)
+            } else {
+                toast.error(data.message)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         fetchSeller()
+        fetchUser()
     }, [])
 
-    const [cartItems, setCartItems] = useState({})
 
     const getTotalCartItems = () => {
         let total = 0;
@@ -77,8 +94,25 @@ const AppContextProvider = ({ children }) => {
         return Math.floor(total);
     }
 
-    const addToCart = (itemId) => {
+    useEffect(() => {
 
+        if (user) {
+            (async () => {
+                try {
+                    const {data} = await axios.post("/api/cart/update", {cartItems})
+                    if (!data.success) {
+                        toast.error(data.message)
+                    }
+                } catch (error) {
+                    toast.error(error.message)
+                }
+            })()
+        }
+
+    }, [cartItems])
+
+    const addToCart = (itemId) => {
+        
         if (cartItems[itemId] === MAX_PER_ITEM_LIMIT) {
             toast.error(`Maximum ${MAX_PER_ITEM_LIMIT} units per item is allowed at one time`, {duration: 1500})
         } else {
@@ -91,8 +125,10 @@ const AppContextProvider = ({ children }) => {
             setCartItems(newCartData);
             toast.success("Added to your Cart!", {duration: 1000})
         }
-
+        
     }
+
+    console.log("Cart Items: ", cartItems)
 
     const removeFromCart = (itemId) => {
         let newCartData = {...cartItems};
@@ -116,10 +152,10 @@ const AppContextProvider = ({ children }) => {
             newCartData[itemId] = no;
         }
         setCartItems(newCartData);
+        toast.success("Cart Updated!", {duration: 1000})
     }
 
     const value = {user, setUser, isSeller, setIsSeller, navigate, location, products, setProducts, addToCart, removeFromCart, cartItems, searchQuery, setSearchQuery, getTotalCartItems, getTotalCartAmount, updateCartItems, addresses, setAddresses, currentAddress, setCurrentAddress, myOrders, setMyOrders, axios, fetchProducts}
-
 
     useEffect(() => {
         fetchProducts()
@@ -129,6 +165,8 @@ const AppContextProvider = ({ children }) => {
             } else {
                 filteredProducts = [...products]
             }
+
+            console.log("search query changed")
 
             setProducts(filteredProducts)
     }, [searchQuery])

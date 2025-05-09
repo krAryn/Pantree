@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 import toast, { Toaster } from 'react-hot-toast'
 import { assets } from '../assets/assets'
 import { Link } from 'react-router'
+import { useAppContext } from '../contexts/AppContext'
 
 const SignUp = () => {
 
@@ -12,20 +13,34 @@ const SignUp = () => {
         formState: { errors, isSubmitting },
     } = useForm()
 
-    const submitData = (data) => {
-        return new Promise((res, rej) => {
-            setTimeout(() => {
-                // console.log("Data submitted!\n", data)
-                res()}, 2000)
-        })
+    // const submitData = (data) => {
+    //     return new Promise((res, rej) => {
+    //         setTimeout(() => {
+    //             // console.log("Data submitted!\n", data)
+    //             res()}, 2000)
+    //     })
         
-    }
+    // }
 
-    const onSubmit = async (data) => {
-        if (!String(data.email).includes("@")) {
+    const {axios, setUser, navigate} = useAppContext()
+
+    const onSubmit = async (userData) => {
+        if (!String(userData.email).includes("@")) {
             toast.error("Please enter a valid Email address", {duration: 1000})
         } else {
-            await submitData(data)
+            // await submitData(data)
+            try {
+                const {data} = await axios.post("/api/user/register", {name: userData.fullname, email: userData.email, password: userData.password})
+                if (data.success) {
+                    setUser(data.currentUser)
+                    navigate("/")
+                    navigate(0)                 // it re-renders the navigated page
+                } else {
+                    toast.error(data.message)
+                }
+            } catch (error) {
+                toast.error(error.message)
+            }
         }
     }
     

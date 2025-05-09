@@ -148,7 +148,7 @@ const AddProduct = () => {
                     </div>
                 </div>
                 {!isSubmitting ?(<button onClick={validate} className="px-8 py-2.5 bg-primary cursor-pointer hover:bg-primary-dull transition text-white font-medium rounded">ADD</button>): (
-                    <button onClick={validate} className="px-8 py-2.5 text-gray-500 bg-gray-500/20 cursor-pointer font-medium rounded" disabled>ADD</button>
+                    <button onClick={validate} className="px-8 py-2.5 text-gray-500 bg-gray-500/20 cursor-pointer font-medium rounded" disabled>Please Wait</button>
                 )}
             </form>
         </div>

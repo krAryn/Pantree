@@ -7,6 +7,8 @@ export const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
+        console.log(name, " ", email, " ", password)
+
         if (!name || !email || !password) {
             console.log(name, " ", email, " ", password, " ")
             return await res.json({ success: false, message: "Missing details!" })
@@ -26,7 +28,7 @@ export const registerUser = async (req, res) => {
         res.cookie("token", token, { 
             httpOnly: true,              // Prevents browser js in clinet to access or modify it
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: "/api/user"
+            path: "/api/"
         })
 
         return await res.json({success: true, message: "User Registration Complete", user: {name, email, password}})
@@ -63,10 +65,15 @@ export const loginUser = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: "/api/user/"
+            path: "/api/"
         })
 
-        return await res.json({success: true, message: "User is Valid "})
+        return await res.json({success: true, message: "Logged In Successfully, Happy Shopping!", currentUser: {
+            id: existingUser._id,
+            name: existingUser.name,
+            email: existingUser.email,
+            cartItems: existingUser.cartItems,
+        }})
     } catch (error) {
         console.log(error.message)
         res.json({success: false, message: error.message})
@@ -75,6 +82,7 @@ export const loginUser = async (req, res) => {
 
 // Path: /api/user/is-auth
 export const isAuth = async (req, res) => {
+    console.log("Under controller")
     try {
         const {userId} = req.body
         const user = await User.findById(userId)
@@ -83,7 +91,12 @@ export const isAuth = async (req, res) => {
             return res.json({success: false, message: "User not authenticated!"})
         }
 
-        return res.json({success: true, message: "Authenticated", user: {id: user._id, name: user.name, email: user.email}})
+        return res.json({success: true, message: "Authenticated", currentUser: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            cartItems: user.cartItems,
+        }})
     } catch (error) {
         console.log(error.message)
         return res.json({success: false, message: error.message})
@@ -99,7 +112,7 @@ export const logout = async (req, res) => {
     }
 
     try {
-        res.clearCookie("token", {httpOnly: true, path: "/api/user/"})
+        res.clearCookie("token", {httpOnly: true, path: "/api/"})
         return res.json({success: true, message: "Logged Out"})
     } catch (error) {
         console.log(error.message)

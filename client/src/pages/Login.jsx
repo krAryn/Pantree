@@ -7,7 +7,7 @@ import { useAppContext } from '../contexts/AppContext'
 
 
 const Login = () => {
-    const {setUser, navigate} = useAppContext(); 
+    const {setUser, navigate, axios} = useAppContext(); 
 
     const {
         register,
@@ -15,21 +15,22 @@ const Login = () => {
         formState: { errors, isSubmitting },
     } = useForm()
 
-    const submitData = () => {
-        return new Promise((res, rej) => {
-            setTimeout(() => {
-                console.log("Data submitted!")
-                res()}, 2000)
-        })
-    }
-
-    const onSubmit = async (data) => {
-        if (!String(data.email).includes("@")) {
+    const onSubmit = async (userData) => {
+        if (!String(userData.email).includes("@")) {
             toast.error("Please enter a valid Email address", {duration: 1000})
         } else {
-            await submitData()
-            setUser(true);
-            navigate("/home")
+
+            try {
+                const {data} = await axios.post("/api/user/login", {email: userData.email, password: userData.password})
+                if (data.success) {
+                    setUser(data.currentUser)
+                    navigate("/")
+                } else {
+                    toast.error(data.message)
+                }
+            } catch (error) {
+                toast.error(error.message)
+            }
         }
     }
     

@@ -32,7 +32,7 @@ const Cart = () => {
         let product = {}
         let prodInCart = []
         for (let item in cartItems) {
-            product = products.find(product => product._id === item)
+            product = products.find(prod => prod._id === item)
             
             product.quantity = cartItems[item]
             prodInCart.push(product)
@@ -61,6 +61,8 @@ const Cart = () => {
             await placeOrder()
         }
     }
+
+    console.log("Cart Items: ", productsInCart)
 
     return productsInCart && (
         <div className="flex flex-col md:flex-row pt-16 max-w-7xl w-full px-6 md:px-16 lg:px-32 mx-auto">

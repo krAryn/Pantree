@@ -3,18 +3,31 @@ import { useState } from 'react'
 import { assets } from '../assets/assets.js'
 import { Link } from 'react-router'
 import { useAppContext } from '../contexts/AppContext.jsx'
+import toast from 'react-hot-toast'
 
 const Navbar = () => {
     const [open, setOpen] = useState(false)
-    const { user, setUser, navigate, setSearchQuery, getTotalCartItems } = useAppContext()
+    const { user, setUser, navigate, setSearchQuery, getTotalCartItems, axios } = useAppContext()
 
     const totalCartItems = getTotalCartItems();
 
 
-    const logout = () => {
-        setOpen(false)
-        setUser(null)
-        navigate("/home")
+    const logout = async () => {
+
+        try {
+            const {data} = await axios.get("/api/user/logout")
+            if (data.success) {
+                toast.success(data.message)
+                setOpen(false)
+                setUser(null)
+                navigate("/home")
+            } else {
+                toast.error(data.message)
+            }
+        } catch(error) {
+            toast.error(error.message)
+        }
+
     }
 
     const myOrdersMobile = () => {

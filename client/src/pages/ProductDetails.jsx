@@ -10,21 +10,21 @@ const ProductDetails = () => {
     const {id, category} = useParams()
 
     const [relatedProducts, setRelatedProducts] = useState()
-    
-    // find products for id
+
     const prod  = products.find(item => item._id === id);
+    console.log(prod)
+
+    console.log("in ", products)
     const [thumbnail, setThumbnail] = useState();
 
     useEffect(() => {
         const filteredProducts = products.filter((product) => product.category.toLowerCase() === category)
         setRelatedProducts(filteredProducts)
         setThumbnail(prod.image[0])
-        // console.log("Hello")
     }, [id])
-
-    // console.log("related: ", relatedProducts)
     
     const product = {
+        _id: prod._id,
         name: prod.name,
         category: prod.category,
         price: prod.price,
@@ -66,9 +66,9 @@ const ProductDetails = () => {
                     <div className="flex items-center gap-0.5 mt-1">
                         {Array(5).fill('').map((_, i) => (
                             product.rating > i ? (
-                                <img src={assets.star_icon} alt="" className='md:w-4 w-3.5' />
+                                <img src={assets.star_icon} alt="" className='md:w-4 w-3.5' key={i} />
                             ) : (
-                                <img src={assets.star_dull_icon} alt="" className='md:w-4 w-3.5' />
+                                <img src={assets.star_dull_icon} alt="" className='md:w-4 w-3.5' key={i} />
                             )
                         ))}
                         <p className="text-base ml-2">({product.rating})</p>
@@ -91,7 +91,7 @@ const ProductDetails = () => {
                         <button className="w-full py-3.5 cursor-pointer font-medium bg-gray-100 text-gray-800/80 hover:bg-gray-200 transition" onClick={() => addToCart(product._id)} >
                             Add to Cart
                         </button>
-                        <button className="w-full py-3.5 cursor-pointer font-medium bg-primary text-white hover:bg-primary-dull transition" onClick={() => {addToCart(product._id); navigate("/mycart")}} >
+                        <button className="w-full py-3.5 cursor-pointer font-medium bg-primary text-white hover:bg-primary-dull transition" onClick={() => {addToCart(product._id); navigate("/myCart")}} >
                             Buy now
                         </button>
                     </div>
