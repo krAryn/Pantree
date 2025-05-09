@@ -7,7 +7,7 @@ import Footer from './components/Footer.jsx'
 import Login from './pages/Login.jsx'
 import SignUp from './pages/SignUp.jsx'
 import AllProducts from './pages/AllProducts.jsx'
-import ProductCategory from './components/ProductCategory.jsx'
+import ProductCategory from './pages/ProductCategory.jsx'
 import ProductDetails from './pages/ProductDetails.jsx'
 import Cart from './pages/Cart.jsx'
 import AddAddress from './pages/AddAddress.jsx'
@@ -21,9 +21,16 @@ import Contact from './pages/Contact.jsx'
 
 
 const App = () => {
-    const {products, isSeller} = useAppContext()
+    const {products, isSeller, user, navigate} = useAppContext()
 
     const location = useLocation().pathname;
+
+    const HomeNavigation = () => {
+        navigate("/home")
+        return (
+            <></>
+        )
+    }
 
     return (
         <div className='min-h-screen text-gray-700 bg-white'>
@@ -32,12 +39,12 @@ const App = () => {
                 <Routes>
                     <Route index element={<Home />} />
                     <Route path="/home" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/login" element={user? <HomeNavigation /> :<Login />} />
+                    <Route path="/signup" element={user? <HomeNavigation /> :<SignUp />} />
                     <Route path="/allproducts" element={<AllProducts />} />
-                    {products && <Route path="/allproducts/:category" element={<ProductCategory />} />}
-                    {products && <Route path="/allproducts/:category/:id" element={<ProductDetails/>} />}
-                    <Route path="/mycart" element={<Cart />} />
+                    {products.length > 0  && <Route path="/allproducts/:category" element={<ProductCategory />} />}
+                    {products.length > 0 && <Route path="/allproducts/:category/:id" element={<ProductDetails/>} />}
+                    {products.length > 0 && <Route path="/mycart" element={<Cart />} />}
                     <Route path="/addaddress" element={<AddAddress />} />
                     <Route path="/myorders" element={<MyOrders />} />
                     <Route path="/seller" element={isSeller ? <SellerLayout /> :<SellerLogin />}>
